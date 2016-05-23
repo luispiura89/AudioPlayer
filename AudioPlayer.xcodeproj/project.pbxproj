@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD20325D1CEEAF1F00D1DE18 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20325C1CEEAF1F00D1DE18 /* Artist.swift */; };
+		CD20325F1CEEB10000D1DE18 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20325E1CEEB10000D1DE18 /* Song.swift */; };
+		CD2032661CEEB3AD00D1DE18 /* Bloomdido.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2032601CEEB3AD00D1DE18 /* Bloomdido.mp3 */; };
+		CD2032671CEEB3AD00D1DE18 /* AdventureOfALifetime.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2032611CEEB3AD00D1DE18 /* AdventureOfALifetime.mp3 */; };
+		CD2032681CEEB3AD00D1DE18 /* SoItMaySecretlyBegin.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2032621CEEB3AD00D1DE18 /* SoItMaySecretlyBegin.mp3 */; };
+		CD2032691CEEB3AD00D1DE18 /* ScrappleFromTheApple.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2032631CEEB3AD00D1DE18 /* ScrappleFromTheApple.mp3 */; };
+		CD20326A1CEEB3AD00D1DE18 /* DontPanic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2032641CEEB3AD00D1DE18 /* DontPanic.mp3 */; };
+		CD20326B1CEEB3AD00D1DE18 /* AuLait.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2032651CEEB3AD00D1DE18 /* AuLait.mp3 */; };
+		CD20326D1CEECA2B00D1DE18 /* PlayTracksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD20326C1CEECA2B00D1DE18 /* PlayTracksViewController.swift */; };
+		CD3790501CEE1745004764AC /* TrackListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD37904F1CEE1745004764AC /* TrackListViewController.swift */; };
 		CD62119F1CEACADD00B4CC2E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD62119E1CEACADD00B4CC2E /* AppDelegate.swift */; };
 		CD6211A11CEACADD00B4CC2E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6211A01CEACADD00B4CC2E /* ViewController.swift */; };
 		CD6211A41CEACADD00B4CC2E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD6211A21CEACADD00B4CC2E /* Main.storyboard */; };
@@ -14,6 +24,7 @@
 		CD6211A91CEACADD00B4CC2E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD6211A71CEACADD00B4CC2E /* LaunchScreen.storyboard */; };
 		CD6211B41CEACADD00B4CC2E /* AudioPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6211B31CEACADD00B4CC2E /* AudioPlayerTests.swift */; };
 		CD6211BF1CEACADD00B4CC2E /* AudioPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6211BE1CEACADD00B4CC2E /* AudioPlayerUITests.swift */; };
+		CD6211CF1CEACD7800B4CC2E /* ArtistInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6211CE1CEACD7800B4CC2E /* ArtistInfoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +45,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CD20325C1CEEAF1F00D1DE18 /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		CD20325E1CEEB10000D1DE18 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		CD2032601CEEB3AD00D1DE18 /* Bloomdido.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Bloomdido.mp3; path = ../../../../../Downloads/Bloomdido.mp3; sourceTree = "<group>"; };
+		CD2032611CEEB3AD00D1DE18 /* AdventureOfALifetime.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = AdventureOfALifetime.mp3; path = ../../../../../Downloads/AdventureOfALifetime.mp3; sourceTree = "<group>"; };
+		CD2032621CEEB3AD00D1DE18 /* SoItMaySecretlyBegin.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = SoItMaySecretlyBegin.mp3; path = ../../../../../Downloads/SoItMaySecretlyBegin.mp3; sourceTree = "<group>"; };
+		CD2032631CEEB3AD00D1DE18 /* ScrappleFromTheApple.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ScrappleFromTheApple.mp3; path = ../../../../../Downloads/ScrappleFromTheApple.mp3; sourceTree = "<group>"; };
+		CD2032641CEEB3AD00D1DE18 /* DontPanic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = DontPanic.mp3; path = ../../../../../Downloads/DontPanic.mp3; sourceTree = "<group>"; };
+		CD2032651CEEB3AD00D1DE18 /* AuLait.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = AuLait.mp3; path = ../../../../../Downloads/AuLait.mp3; sourceTree = "<group>"; };
+		CD20326C1CEECA2B00D1DE18 /* PlayTracksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayTracksViewController.swift; sourceTree = "<group>"; };
+		CD37904F1CEE1745004764AC /* TrackListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackListViewController.swift; sourceTree = "<group>"; };
 		CD62119B1CEACADD00B4CC2E /* AudioPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD62119E1CEACADD00B4CC2E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CD6211A01CEACADD00B4CC2E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +68,7 @@
 		CD6211BA1CEACADD00B4CC2E /* AudioPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD6211BE1CEACADD00B4CC2E /* AudioPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerUITests.swift; sourceTree = "<group>"; };
 		CD6211C01CEACADE00B4CC2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD6211CE1CEACD7800B4CC2E /* ArtistInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistInfoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +119,15 @@
 		CD62119D1CEACADD00B4CC2E /* AudioPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				CD2032601CEEB3AD00D1DE18 /* Bloomdido.mp3 */,
+				CD2032611CEEB3AD00D1DE18 /* AdventureOfALifetime.mp3 */,
+				CD2032621CEEB3AD00D1DE18 /* SoItMaySecretlyBegin.mp3 */,
+				CD2032631CEEB3AD00D1DE18 /* ScrappleFromTheApple.mp3 */,
+				CD2032641CEEB3AD00D1DE18 /* DontPanic.mp3 */,
+				CD2032651CEEB3AD00D1DE18 /* AuLait.mp3 */,
+				CD6211CD1CEACD5100B4CC2E /* View Controler */,
+				CD6211CC1CEACD4800B4CC2E /* Model */,
 				CD62119E1CEACADD00B4CC2E /* AppDelegate.swift */,
-				CD6211A01CEACADD00B4CC2E /* ViewController.swift */,
 				CD6211A21CEACADD00B4CC2E /* Main.storyboard */,
 				CD6211A51CEACADD00B4CC2E /* Assets.xcassets */,
 				CD6211A71CEACADD00B4CC2E /* LaunchScreen.storyboard */,
@@ -123,6 +152,26 @@
 				CD6211C01CEACADE00B4CC2E /* Info.plist */,
 			);
 			path = AudioPlayerUITests;
+			sourceTree = "<group>";
+		};
+		CD6211CC1CEACD4800B4CC2E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CD20325C1CEEAF1F00D1DE18 /* Artist.swift */,
+				CD20325E1CEEB10000D1DE18 /* Song.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		CD6211CD1CEACD5100B4CC2E /* View Controler */ = {
+			isa = PBXGroup;
+			children = (
+				CD6211A01CEACADD00B4CC2E /* ViewController.swift */,
+				CD6211CE1CEACD7800B4CC2E /* ArtistInfoViewController.swift */,
+				CD37904F1CEE1745004764AC /* TrackListViewController.swift */,
+				CD20326C1CEECA2B00D1DE18 /* PlayTracksViewController.swift */,
+			);
+			name = "View Controler";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,6 +243,11 @@
 					CD62119A1CEACADD00B4CC2E = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = A6GBL74394;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					CD6211AE1CEACADD00B4CC2E = {
 						CreatedOnToolsVersion = 7.3;
@@ -232,8 +286,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD2032661CEEB3AD00D1DE18 /* Bloomdido.mp3 in Resources */,
+				CD2032671CEEB3AD00D1DE18 /* AdventureOfALifetime.mp3 in Resources */,
+				CD2032681CEEB3AD00D1DE18 /* SoItMaySecretlyBegin.mp3 in Resources */,
+				CD20326B1CEEB3AD00D1DE18 /* AuLait.mp3 in Resources */,
 				CD6211A91CEACADD00B4CC2E /* LaunchScreen.storyboard in Resources */,
+				CD20326A1CEEB3AD00D1DE18 /* DontPanic.mp3 in Resources */,
 				CD6211A61CEACADD00B4CC2E /* Assets.xcassets in Resources */,
+				CD2032691CEEB3AD00D1DE18 /* ScrappleFromTheApple.mp3 in Resources */,
 				CD6211A41CEACADD00B4CC2E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,8 +319,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD20325F1CEEB10000D1DE18 /* Song.swift in Sources */,
+				CD20325D1CEEAF1F00D1DE18 /* Artist.swift in Sources */,
 				CD6211A11CEACADD00B4CC2E /* ViewController.swift in Sources */,
+				CD20326D1CEECA2B00D1DE18 /* PlayTracksViewController.swift in Sources */,
 				CD62119F1CEACADD00B4CC2E /* AppDelegate.swift in Sources */,
+				CD3790501CEE1745004764AC /* TrackListViewController.swift in Sources */,
+				CD6211CF1CEACD7800B4CC2E /* ArtistInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,10 +469,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = AudioPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.smoothct.AudioPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -415,10 +483,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = AudioPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.smoothct.AudioPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -487,6 +558,7 @@
 				CD6211C51CEACADE00B4CC2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CD6211C61CEACADE00B4CC2E /* Build configuration list for PBXNativeTarget "AudioPlayerTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +567,7 @@
 				CD6211C81CEACADE00B4CC2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CD6211C91CEACADE00B4CC2E /* Build configuration list for PBXNativeTarget "AudioPlayerUITests" */ = {
 			isa = XCConfigurationList;
@@ -503,6 +576,7 @@
 				CD6211CB1CEACADE00B4CC2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
