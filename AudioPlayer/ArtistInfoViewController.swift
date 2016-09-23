@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 struct ArtistInfo {
     var image: UIImage
     var name: String
@@ -23,7 +24,7 @@ class ArtistInfoViewController: UIViewController {
     
     var artistInfo: Artist!
     var pageIndex: Int!
-    var delegate: AudioPlayerStarted!
+    //var delegate: AudioPlayerStarted!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +33,7 @@ class ArtistInfoViewController: UIViewController {
         
         
         // Do any additional setup after loading the view.
-        artistImageView.image = artistInfo.image
+        artistImageView.image = UIImage(data: artistInfo.image!)
         artistNameLabel.text = artistInfo.name
         newArtistLabel.text = artistInfo.biography
         
@@ -60,7 +61,6 @@ class ArtistInfoViewController: UIViewController {
         if segue.identifier == "ShowTrackList"{
             if let vc = segue.destinationViewController as? TrackListViewController{
                 vc.artist = artistInfo
-                vc.delegate = delegate
             }
         }
     }

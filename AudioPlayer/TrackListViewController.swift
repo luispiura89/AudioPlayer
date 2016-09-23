@@ -12,13 +12,14 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
 
     var artist: Artist!
     var selectedSongIndex: NSIndexPath!
-    var delegate: AudioPlayerStarted!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.title = "\(artist.name)'s Songs"
+        if let artistName = artist.name{
+            self.title = "\(artistName)'s Songs"
+        }
         UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
     }
     
@@ -36,9 +37,9 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     override func motionBegan(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if let delegate = delegate{
-            delegate.nextTrack(false)
-        }
+        //if let delegate = delegate{
+            PlayerManager.nextTrack(false)
+        //}
     }
     
 
@@ -51,11 +52,11 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
         // Pass the selected object to the new view controller.
         if segue.identifier == "PlayTracks"{
             if let vc = segue.destinationViewController as? PlayTracksViewController{
-                vc.songList = artist.songList
-                vc.currentSong = artist.songList[selectedSongIndex.row]
+                let artistSongs = artist.songlist?.allObjects as? [Song]
+                vc.songList = artistSongs
+                vc.currentSong = artistSongs![selectedSongIndex.row]
                 vc.songIndex = selectedSongIndex
                 vc.artist = artist
-                vc.delegate = delegate
             }
         }
     }
@@ -68,7 +69,9 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return artist.songList.count
+        
+        let artistSongs = artist.songlist?.allObjects as? [Song]
+        return artistSongs!.count
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -83,9 +86,11 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let cell = tableView.dequeueReusableCellWithIdentifier("TrackCell")!
         
-        cell.textLabel?.text = artist.songList[indexPath.row].name
-        cell.detailTextLabel?.text = "Album: \(artist.songList[indexPath.row].album)"
-        cell.imageView?.image = artist.songList[indexPath.row].artwork
+        let artistSongs = artist.songlist?.allObjects as? [Song]
+        
+        cell.textLabel?.text = artistSongs![indexPath.row].name
+        cell.detailTextLabel?.text = "Album: \(artistSongs![indexPath.row].album!)"
+        cell.imageView?.image = UIImage(data: artistSongs![indexPath.row].artwork!)
         
         return cell
         
@@ -99,24 +104,24 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     //MARK: - RemoteControls
     override func remoteControlReceivedWithEvent(event: UIEvent?) {
-        if let delegate = delegate{
+        //if let delegate = delegate{
             switch event!.subtype {
             case .RemoteControlPlay:
-                delegate.playTrack(false)
+                PlayerManager.playTrack(false)
                 break
             case .RemoteControlPause:
-                delegate.pauseTrack(false)
+                PlayerManager.pauseTrack(false)
                 break
             case .RemoteControlNextTrack:
-                delegate.nextTrack(false)
+                PlayerManager.nextTrack(false)
                 break
             case .RemoteControlPreviousTrack:
-                delegate.previousTrack(false)
+                PlayerManager.previousTrack(false)
                 break
             default:
                 break
             }
-        }
+        //}
         
     }
 

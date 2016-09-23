@@ -8,13 +8,14 @@
 
 import UIKit
 import MediaPlayer
+import CoreData
 
-class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewControllerDataSource, AudioPlayerStarted{
+class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewControllerDataSource{
 
     var artistsPageLoader: UIPageViewController!
     var artistPages = [ArtistInfoViewController]()
     var audioPlayerDelegated: AVAudioPlayer?
-    var timer: NSTimer!
+    //var timer: NSTimer!
     var delegate: SongPlayed!
     var currentSong: Song!
     var songList: [Song]!
@@ -25,46 +26,103 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        
-        
-        
-        UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
-        
         //Aqui se deberia cargar la data del sitio
-        
         let artistsInfo = [ArtistInfo(image: UIImage(named: "charlieparker")!, name: "Charlie Parker", news: "Charles Christopher Parker, Jr. (Kansas City, 29 de agosto de 1920 - Nueva York, 12 de marzo de 1955), conocido como Charlie Parker, fue un saxofonista y compositor estadounidense de jazz."),
                            ArtistInfo(image: UIImage(named: "coldplay")!,name: "Coldplay", news: "Coldplay are a British rock band formed in 1996 by lead vocalist and pianist Chris Martin and lead guitarist Jonny Buckland at University College London"),
                            ArtistInfo(image: UIImage(named: "patmetheny")!,name: "Pat Metheny", news: "He is the leader of the Pat Metheny Group and is also involved in duets, solo works and other side projects. His style incorporates elements of progressive and contemporary jazz, post-bop, Latin jazz and jazz fusion")]
         
+        /*
+        let query = Query(className: Artist.ClassName)
+        if let res = query.find() as? [Artist]{
+            print(res.count)
+            for r in res{
+                print(r.songlist?.allObjects.count)
+            }
+            print("==========")
+        }
+        */
+        
         for index in 0..<artistsInfo.count{
             if let artistController = self.storyboard?.instantiateViewControllerWithIdentifier("ArtistInfo") as? ArtistInfoViewController{
                 
-                let artist = Artist(name: artistsInfo[index].name, biography: artistsInfo[index].news, image: artistsInfo[index].image)
+                let artist = NSEntityDescription.insertNewObjectForEntityForName(Artist.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Artist//Artist()//Artist(name: artistsInfo[index].name, biography: artistsInfo[index].news, image: artistsInfo[index].image)
+                
+                artist.name = artistsInfo[index].name
+                artist.biography = artistsInfo[index].news
+                artist.image = UIImageJPEGRepresentation(artistsInfo[index].image, 1.0)
+                
+                
+                var songList = [Song]()
+                var song: Song!
                 
                 switch index {
                 case 0:
-                    artist.songList.append(Song(name: "Bloomdido", album: "Bird And Diz", artwork: UIImage(named: "BirdAndDiz")!, path: NSBundle.mainBundle().pathForResource("Bloomdido", ofType: "mp3")!))
-                    artist.songList.append(Song(name: "Scrapple From The Apple", album: "Bird And Diz", artwork: UIImage(named: "BirdAndDiz")!, path: NSBundle.mainBundle().pathForResource("ScrappleFromTheApple", ofType: "mp3")!))
-                case 1:
-                    artist.songList.append(Song(name: "Don't Panic", album: "Parachutes", artwork: UIImage(named: "Parachutes")!, path: NSBundle.mainBundle().pathForResource("DontPanic", ofType: "mp3")!))
-                    artist.songList.append(Song(name: "Adventure Of A Lifetime", album: "A Head Full Of Dreams", artwork: UIImage(named: "AHeadFullOfDreams")!, path: NSBundle.mainBundle().pathForResource("AdventureOfALifetime", ofType: "mp3")!))
+                    songList = [Song]()
                     
+                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song.name = "Bloomdido"
+                    song.album = "Bird And Diz"
+                    song.artwork = UIImageJPEGRepresentation(UIImage(named: "BirdAndDiz")!, 1.0)
+                    song.path = NSBundle.mainBundle().pathForResource("Bloomdido", ofType: "mp3")!
+                    song.online = false
+                    
+                    songList.append(song)
+                    
+                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song.name = "Scrapple From The Apple"
+                    song.album = "Bird And Diz"
+                    song.artwork = UIImageJPEGRepresentation(UIImage(named: "BirdAndDiz")!, 1.0)
+                    song.path = NSBundle.mainBundle().pathForResource("ScrappleFromTheApple", ofType: "mp3")!
+                    song.online = false
+                    
+                    songList.append(song)
+                    
+                    
+                    artist.songlist = NSSet(array: songList)
+                case 1:
+                    songList = [Song]()
+                    
+                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song.name = "Don't Panic"
+                    song.album = "Parachutes"
+                    song.artwork = UIImageJPEGRepresentation(UIImage(named: "Parachutes")!, 1.0)
+                    song.path = NSBundle.mainBundle().pathForResource("DontPanic", ofType: "mp3")!
+                    song.online = false
+                    
+                    songList.append(song)
+                    
+                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song.name = "Adventure Of A Lifetime"
+                    song.album = "A Head Full Of Dreams"
+                    song.artwork = UIImageJPEGRepresentation(UIImage(named: "AHeadFullOfDreams")!, 1.0)
+                    song.path = NSBundle.mainBundle().pathForResource("AdventureOfALifetime", ofType: "mp3")!
+                    song.online = false
+                    
+                    songList.append(song)
+                    
+                    artist.songlist = NSSet(array: songList)
                 case 2:
-                    artist.songList.append(Song(name: "So It May Secretly Begin", album: "Still Life(Talking)", artwork: UIImage(named: "StillLife")!, path: NSBundle.mainBundle().pathForResource("SoItMaySecretlyBegin", ofType: "mp3")!))
-                    artist.songList.append(Song(name: "Au Lait", album: "Offramp", artwork: UIImage(named: "Offramp")!, path: NSBundle.mainBundle().pathForResource("AuLait", ofType: "mp3")!))
+                    songList = [Song]()
+                    
+                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song.name = "So It May Secretly Begin"
+                    song.album = "Still Life(Talking)"
+                    song.artwork = UIImageJPEGRepresentation(UIImage(named: "StillLife")!, 1.0)
+                    song.path = NSBundle.mainBundle().pathForResource("SoItMaySecretlyBegin", ofType: "mp3")!
+                    song.online = false
+                    
+                    songList.append(song)
+                    
+                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song.name = "Au Lait"
+                    song.album = "Offramp"
+                    song.artwork = UIImageJPEGRepresentation(UIImage(named: "Offramp")!, 1.0)
+                    song.path = NSBundle.mainBundle().pathForResource("AuLait", ofType: "mp3")!
+                    song.online = false
+                    
+                    songList.append(song)
+                    
+                    artist.songlist = NSSet(array: songList)
                 default:
                     break
                 }
@@ -72,7 +130,7 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
                 
                 artistController.artistInfo = artist
                 artistController.pageIndex = index
-                artistController.delegate = self
+                //artistController.delegate = self
                 
                 
                 artistPages.append(artistController)
@@ -106,9 +164,7 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
     }
     
     override func motionBegan(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if songList != nil{
-            nextTrack(false)
-        }
+        PlayerManager.nextTrack(false)
     }
     
     //MARK: - UIPageControllerDelegate
@@ -143,7 +199,38 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         return nil
     }
     
-    //MARK: - AudioPlayerStarted
+    //MARK: - RemoteControls
+    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+        
+        switch event!.subtype {
+        case .RemoteControlPlay:
+            PlayerManager.playTrack(false)
+            break
+        case .RemoteControlPause:
+            PlayerManager.pauseTrack(false)
+            break
+        case .RemoteControlNextTrack:
+            PlayerManager.nextTrack(false)
+            break
+        case .RemoteControlPreviousTrack:
+            PlayerManager.previousTrack(false)
+            break
+        default:
+            break
+        }
+        
+    }
+  
+    
+    @IBAction func showDownload(sender: AnyObject) {
+        performSegueWithIdentifier("downloadCenter", sender: self)
+    }
+    
+    
+    
+    //MARK: - AudioPlayerStartedDelegate Deprecated
+    
+    /*
     
     func audioPlayerStarted(song: Song, songList: [Song], currentIndex : NSIndexPath, artistInfo: Artist){
         if let audioPlayerDelegated = audioPlayerDelegated{
@@ -306,28 +393,6 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         }
     }
     
-    //MARK: - RemoteControls
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
-     
-         switch event!.subtype {
-            case .RemoteControlPlay:
-                playTrack(false)
-                break
-            case .RemoteControlPause:
-                pauseTrack(false)
-                break
-            case .RemoteControlNextTrack:
-                nextTrack(false)
-                break
-            case .RemoteControlPreviousTrack:
-                previousTrack(false)
-                break
-            default:
-                break
-        }
-     
-    }
-    
     func updateBlockedScreen() {
         let artwork = MPMediaItemArtwork(image: currentSong.artwork)
         
@@ -338,6 +403,6 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
             MPMediaItemPropertyPlaybackDuration : Float(audioPlayerDelegated!.duration),
             MPMediaItemPropertyAlbumTitle: currentSong.album,
             MPNowPlayingInfoPropertyPlaybackRate : 1.0
-        ]    }
+        ]    }*/
 }
 
