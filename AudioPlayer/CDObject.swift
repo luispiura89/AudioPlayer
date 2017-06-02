@@ -12,14 +12,14 @@ import CoreData
 class CDObject: NSManagedObject {
     init() {
         let context = DataManager.managedObjectContext
-        let entity = NSEntityDescription.insertNewObjectForEntityForName(String(self.dynamicType), inManagedObjectContext: context)
+        let entity = NSEntityDescription.insertNewObject(forEntityName: String(describing: type(of: self)), into: context)
         
-        super.init(entity: entity.entity, insertIntoManagedObjectContext: entity.managedObjectContext)
+        super.init(entity: entity.entity, insertInto: entity.managedObjectContext)
         
     }
     
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
     }
     
     func save() {

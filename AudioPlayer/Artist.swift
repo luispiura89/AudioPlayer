@@ -13,7 +13,7 @@ import UIKit
 class Artist: CDObject {
     
     static let ClassName = "Artist"
-    private var imageURL: NSURL!
+    fileprivate var imageURL: URL!
     var id: String!
     //var name: String!
     //var biography: String!
@@ -48,24 +48,25 @@ class Artist: CDObject {
         
         
         if let imageURL = record["coverimage_url"] as? String{
-            self.imageURL = NSURL(string: imageURL)
+            self.imageURL = URL(string: imageURL)
         }
     }
     
-    func downloadImageIfNeeded(completionBlock : (image : UIImage) -> Void) {
+    func downloadImageIfNeeded(_ completionBlock : @escaping (_ image : UIImage) -> Void) {
         if self.image != nil {
-            if let image = UIImage(data: self.image!) {
-                completionBlock(image: image)
+            if let image = UIImage(data: self.image! as Data) {
+                completionBlock(image)
             }
             return
         }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        //DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+        DispatchQueue.global(qos: .default).async {
             if let imageURL = self.imageURL {
-                if let data = NSData(contentsOfURL: self.imageURL) {
+                if let data = try? Data(contentsOf: imageURL) {
                     if let image = UIImage(data: data) {
                         self.image = data
-                        dispatch_async(dispatch_get_main_queue(), {
-                            completionBlock(image: image)
+                        DispatchQueue.main.async(execute: {
+                            completionBlock(image)
                         })
                         
                     }

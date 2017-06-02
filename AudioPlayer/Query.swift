@@ -12,41 +12,41 @@ import CoreData
 class Query: NSObject {
     
     var className : String
-    private var request = NSFetchRequest()
+    fileprivate var request = NSFetchRequest<NSFetchRequestResult>()
     
     init(className : String) {
         self.className = className
     }
     
-    func limit(n : Int) {
+    func limit(_ n : Int) {
         request.fetchLimit = n
     }
     
-    func ascending(key : String) {
+    func ascending(_ key : String) {
         request.sortDescriptors = [NSSortDescriptor(key : key, ascending: true )]
     }
     
-    func descending(key : String) {
+    func descending(_ key : String) {
         request.sortDescriptors = [NSSortDescriptor(key : key, ascending: false )]
     }
     
-    func equalTo(key : String, value : AnyObject) {
+    func equalTo(_ key : String, value : AnyObject) {
         setTypeToPredicate(key, value: value, qoperator: "=")
     }
     
-    func contains(key : String, substring : String) {
-        setTypeToPredicate(key, value: substring, qoperator: "CONTAINS[cd]")
+    func contains(_ key : String, substring : String) {
+        setTypeToPredicate(key, value: substring as AnyObject, qoperator: "CONTAINS[cd]")
     }
     
-    func greaterThan(key : String, value : AnyObject) {
+    func greaterThan(_ key : String, value : AnyObject) {
         setTypeToPredicate(key, value: value, qoperator: ">")
     }
     
-    func lessThan(key : String, value : AnyObject) {
+    func lessThan(_ key : String, value : AnyObject) {
         setTypeToPredicate(key, value: value, qoperator: "<")
     }
     
-    private func setTypeToPredicate (key : String, value : AnyObject, qoperator : String ) {
+    fileprivate func setTypeToPredicate (_ key : String, value : AnyObject, qoperator : String ) {
         var afterPredicate = ""
         if request.predicate != nil {
             afterPredicate = "\(request.predicate!.predicateFormat) AND"
@@ -55,8 +55,8 @@ class Query: NSObject {
             request.predicate = NSPredicate(format: "\(afterPredicate) \(key) \(qoperator) %@", value)
         } else if let value = value as? NSNumber {
             request.predicate = NSPredicate(format: "\(afterPredicate) \(key) \(qoperator) %@", value)
-        } else if let value = value as? NSDate {
-            request.predicate = NSPredicate(format: "\(afterPredicate) \(key) \(qoperator) %@", value)
+        } else if let value = value as? Date {
+            request.predicate = NSPredicate(format: "\(afterPredicate) \(key) \(qoperator) %@", value as CVarArg)
         }
     }
     

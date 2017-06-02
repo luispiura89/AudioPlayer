@@ -16,9 +16,9 @@ extension Song {
 
     @NSManaged var name: String?
     @NSManaged var album: String?
-    @NSManaged var artwork: NSData?
+    @NSManaged var artwork: Data?
     @NSManaged var path: String?
-    @NSManaged var data: NSData?
+    @NSManaged var data: Data?
     @NSManaged var songartist: Artist?
 
 }

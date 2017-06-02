@@ -12,38 +12,38 @@ import CoreData
 
 class Test: NSObject {
     
-    private static var testObj = Test()
+    fileprivate static var testObj = Test()
     
     static func sharedTest() -> Test {
         return testObj
         
     }
     
-    private override init() {
+    fileprivate override init() {
         
     }
 }
 
 protocol AudioPlayerStarted {
-    func audioPlayerStarted(song: Song, songList: [Song], currentIndex: NSIndexPath, artistInfo: Artist)
-    func setSongPlayedDelegate(songPlayed: SongPlayed)
-    func setPlayerCurrentTime(currentTime: Float)
+    func audioPlayerStarted(_ song: Song, songList: [Song], currentIndex: IndexPath, artistInfo: Artist)
+    func setSongPlayedDelegate(_ songPlayed: SongPlayed)
+    func setPlayerCurrentTime(_ currentTime: Float)
     func stopPlaying()
     func resumePlaying()
-    func playTrack(playTrack: Bool)
-    func pauseTrack(playTrack: Bool)
-    func nextTrack(playTrack: Bool)
-    func previousTrack(playTrack: Bool)
+    func playTrack(_ playTrack: Bool)
+    func pauseTrack(_ playTrack: Bool)
+    func nextTrack(_ playTrack: Bool)
+    func previousTrack(_ playTrack: Bool)
 }
 
 protocol SongPlayed {
-    func setPlayerDuration(duration: Float)
-    func setPlayerCurrentTime(currentTime: Float)
-    func changPlayingStatus(status: Bool)
-    func setCurrentPlayedSong(currentSong: Song)
+    func setPlayerDuration(_ duration: Float)
+    func setPlayerCurrentTime(_ currentTime: Float)
+    func changPlayingStatus(_ status: Bool)
+    func setCurrentPlayedSong(_ currentSong: Song)
 }
 
-class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelegate {
+class PlayTracksViewController: UIViewController, SongPlayed, URLSessionDelegate {
     @IBOutlet weak var artworkImageView: UIImageView!
     @IBOutlet weak var songNameLabel: UILabel!
     @IBOutlet weak var songAlbumLabel: UILabel!
@@ -53,20 +53,20 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
     @IBOutlet weak var deleteButton: UIButton!
     
     
-    var downloadTask : NSURLSessionDownloadTask!
+    var downloadTask : URLSessionDownloadTask!
     var remoteEvent: UIEvent!
     var didMotion = false
     var isDownloading = false
     
     var songList: [Song]!
     var currentSong: Song!
-    var songIndex: NSIndexPath!
+    var songIndex: IndexPath!
     var artist: Artist!
     var currentIndex: Int!
     
     var isPlaying = true{
         didSet{
-            playButton.selected = !isPlaying
+            playButton.isSelected = !isPlaying
         }
     }
 
@@ -75,34 +75,34 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
 
         // Do any additional setup after loading the view.
         
-        donwloadButton.hidden = true
-        deleteButton.hidden = true
+        donwloadButton.isHidden = true
+        deleteButton.isHidden = true
         currentIndex = songIndex.row
         updateUI()
         startSong()
 
-        UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         becomeFirstResponder()
     }
 
-    override func motionBegan(motion: UIEventSubtype, withEvent event: UIEvent?) {
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
         if !currentSong.online{
             PlayerManager.nextTrack(true)
         }else{
             didMotion = true
-            if let url = nextSongURL(){
+            if nextSongURL() != nil{
                 if nextSongData() != nil{
                     PlayerManager.nextTrack(true)
                 }else{
                     if !isDownloading{
                         isDownloading = true
-                        let downloadRequest = NSMutableURLRequest(URL: url)
-                        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration() , delegate: self, delegateQueue: NSOperationQueue.mainQueue())
-                        downloadTask = session.downloadTaskWithRequest(downloadRequest)
-                        downloadTask.resume()
+                        /*let downloadRequest = NSMutableURLRequest(url: url)
+                        let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                        downloadTask = session.downloadTask(with: downloadRequest)
+                        downloadTask.resume()*/
                     }
                 }
             }
@@ -116,7 +116,7 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
     
     func updateUI(){
         
-        artworkImageView.image = UIImage(data: currentSong.artwork!)
+        artworkImageView.image = UIImage(data: currentSong.artwork! as Data)
         songNameLabel.text = currentSong.name
         songAlbumLabel.text = currentSong.album
         currentTimeSlider.value = 0
@@ -128,19 +128,19 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
             PlayerManager.setSongPlayedDelegate(self)
         }else{
             if let data = currentSong.data{
-                deleteButton.hidden = false
+                deleteButton.isHidden = false
                 
                 PlayerManager.currentSongData(data)
                 PlayerManager.audioPlayerStarted(currentSong, songList: songList, currentIndex: songIndex, artistInfo: artist)
                 PlayerManager.setSongPlayedDelegate(self)
             }else{
-                if let URL = currentSong.fileURL{
+                if currentSong.fileURL != nil{
                     if !isDownloading{
                         isDownloading = true
-                        let downloadRequest = NSMutableURLRequest(URL: URL)
-                        let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration() , delegate: self, delegateQueue: NSOperationQueue.mainQueue())
-                        downloadTask = session.downloadTaskWithRequest(downloadRequest)
-                        downloadTask.resume()
+                        /*let downloadRequest = NSMutableURLRequest(url: URL as URL)
+                        let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                        downloadTask = session.downloadTask(with: downloadRequest)
+                        downloadTask.resume()*/
                     }
                 }
             }
@@ -150,7 +150,7 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
         
     }
     
-    @IBAction func playPause(sender: AnyObject) {
+    @IBAction func playPause(_ sender: AnyObject) {
         if isPlaying == true{
             isPlaying = false
             PlayerManager.stopPlaying()
@@ -160,21 +160,21 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
         }
     }
     
-    @IBAction func donwloadAction(sender: AnyObject) {
-        donwloadButton.hidden = true
-        deleteButton.hidden = false
+    @IBAction func donwloadAction(_ sender: AnyObject) {
+        donwloadButton.isHidden = true
+        deleteButton.isHidden = false
 
         currentSong.save()
     }
     
-    @IBAction func deleteAction(sender: AnyObject) {
+    @IBAction func deleteAction(_ sender: AnyObject) {
         currentSong.data = nil
-        donwloadButton.hidden = false
-        deleteButton.hidden = true
+        donwloadButton.isHidden = false
+        deleteButton.isHidden = true
         currentSong.save()
     }
     
-    @IBAction func moveCurrentTime(sender: AnyObject) {
+    @IBAction func moveCurrentTime(_ sender: AnyObject) {
         PlayerManager.setPlayerCurrentTime(currentTimeSlider.value)
     }
 
@@ -188,80 +188,82 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
     }
     */
     
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     
     //MARK: - SongPlayedDelegate
     
-    func setPlayerDuration(duration: Float) {
+    func setPlayerDuration(_ duration: Float) {
         currentTimeSlider.maximumValue = duration
     }
     
-    func setPlayerCurrentTime(currentTime: Float) {
+    func setPlayerCurrentTime(_ currentTime: Float) {
         currentTimeSlider.value = currentTime
     }
     
-    func changPlayingStatus(status: Bool) {
+    func changPlayingStatus(_ status: Bool) {
         isPlaying = status
     }
     
-    func setCurrentPlayedSong(currentSong: Song) {
+    func setCurrentPlayedSong(_ currentSong: Song) {
         self.currentSong = currentSong
         updateUI()
     }
     
     //MARK: - RemoteControls
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+    override func remoteControlReceived(with event: UIEvent?) {
         //if let delegate = delegate{
             switch event!.subtype {
-            case .RemoteControlPlay:
+            case .remoteControlPlay:
                 PlayerManager.playTrack(true)
                 break
-            case .RemoteControlPause:
+            case .remoteControlPause:
                 PlayerManager.pauseTrack(true)
                 break
-            case .RemoteControlNextTrack:
+            case .remoteControlNextTrack:
                 remoteEvent = event
                 if !currentSong.online{
                     PlayerManager.nextTrack(true)
                 }else{
-                    if let url = nextSongURL(){
+                    if nextSongURL() != nil{
                         if nextSongData() != nil{
                             PlayerManager.nextTrack(true)
                         }else{
                             if !isDownloading{
                                 isDownloading = true
-                                let downloadRequest = NSMutableURLRequest(URL: url)
-                                let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration() , delegate: self, delegateQueue: NSOperationQueue.mainQueue())
-                                downloadTask = session.downloadTaskWithRequest(downloadRequest)
-                                downloadTask.resume()
+                                //let downloadRequest = NSMutableURLRequest(url: url)
+                                
+                                //let downloadRequest = NSMutableURLRequest(url: url)
+                                //let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                                //downloadTask = session.downloadTask(with: downloadRequest)
+                                //downloadTask.resume()
                             }
                         }
                     }
                 }
                 break
-            case .RemoteControlPreviousTrack:
+            case .remoteControlPreviousTrack:
                 remoteEvent = event
                 if !currentSong.online{
                     PlayerManager.previousTrack(true)
                 }else{
-                    if let url = nextSongURL(){
+                    if nextSongURL() != nil{
                         if nextSongData() != nil{
                             PlayerManager.previousTrack(true)
                         }else{
                             if !isDownloading{
                                 isDownloading = true
-                                let downloadRequest = NSMutableURLRequest(URL: url)
-                                let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration() , delegate: self, delegateQueue: NSOperationQueue.mainQueue())
-                                downloadTask = session.downloadTaskWithRequest(downloadRequest)
-                                downloadTask.resume()
+                                /*let downloadRequest = NSMutableURLRequest(url: url)
+                                let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                                downloadTask = session.downloadTask(with: downloadRequest)
+                                downloadTask.resume()*/
                             }
                         }
                     }
                 }
                 break
-            case .MotionShake:
+            case .motionShake:
                 print("aqui")
                 break
             default:
@@ -273,16 +275,16 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
     
     //MARK: - URLSessionDelegate
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+    func URLSession(_ session: Foundation.URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingToURL location: URL) {
         
-        if let data = NSData(contentsOfURL: location) {
+        if let data = try? Data(contentsOf: location) {
             if !didMotion{
                 if let remoteEvent = remoteEvent{
                     switch remoteEvent.subtype {
-                    case .RemoteControlNextTrack:
+                    case .remoteControlNextTrack:
                         PlayerManager.currentSongData(data)
                         PlayerManager.nextTrack(true)
-                    case .RemoteControlPreviousTrack:
+                    case .remoteControlPreviousTrack:
                         PlayerManager.currentSongData(data)
                         PlayerManager.previousTrack(true)
                     default:
@@ -293,7 +295,7 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
                     PlayerManager.currentSongData(data)
                     PlayerManager.audioPlayerStarted(currentSong, songList: songList, currentIndex: songIndex, artistInfo: artist)
                     PlayerManager.setSongPlayedDelegate(self)
-                    donwloadButton.hidden = false
+                    donwloadButton.isHidden = false
                 }
             }else{
                 
@@ -305,38 +307,38 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
         
     }
     
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+    func URLSession(_ session: Foundation.URLSession, task: URLSessionTask, didCompleteWithError error: NSError?) {
         if let error = error{
-            let alert = UIAlertController(title: "Oops", message: error.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Oops", message: error.localizedDescription, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
     //MARK: - Other functions
     
     
-    func nextSongURL() -> NSURL?{
+    func nextSongURL() -> URL?{
         var currentIndexNexSong = PlayerManager.currentIndex
         if !didMotion{
             if let remoteEvent = remoteEvent{
                 switch remoteEvent.subtype {
-                case .RemoteControlNextTrack:
+                case .remoteControlNextTrack:
                     
                     
                     if currentIndexNexSong == songList.count - 1{
                         currentIndexNexSong = 0
                     }else{
-                        currentIndexNexSong = currentIndexNexSong + 1
+                        currentIndexNexSong = currentIndexNexSong! + 1
                     }
                     
-                case .RemoteControlPreviousTrack:
+                case .remoteControlPreviousTrack:
                     
                     
                     if currentIndexNexSong == 0{
                         currentIndexNexSong = songList.count - 1
                     }else{
-                        currentIndexNexSong = currentIndexNexSong - 1
+                        currentIndexNexSong = currentIndexNexSong! - 1
                     }
                     
                 default:
@@ -348,7 +350,7 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
                 if currentIndexNexSong == songList.count - 1{
                     currentIndexNexSong = 0
                 }else{
-                    currentIndexNexSong = currentIndexNexSong + 1
+                    currentIndexNexSong = currentIndexNexSong! + 1
                 }
             }else{
                 return nil
@@ -356,30 +358,30 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
             
         }
         
-        return PlayerManager.songList[currentIndexNexSong].fileURL
+        return PlayerManager.songList[currentIndexNexSong!].fileURL
     }
     
-    func nextSongData() -> NSData?{
+    func nextSongData() -> Data?{
         var currentIndexNexSong = PlayerManager.currentIndex
         if !didMotion{
             if let remoteEvent = remoteEvent{
                 switch remoteEvent.subtype {
-                case .RemoteControlNextTrack:
+                case .remoteControlNextTrack:
                     
                     
                     if currentIndexNexSong == songList.count - 1{
                         currentIndexNexSong = 0
                     }else{
-                        currentIndexNexSong = currentIndexNexSong + 1
+                        currentIndexNexSong = currentIndexNexSong! + 1
                     }
                     
-                case .RemoteControlPreviousTrack:
+                case .remoteControlPreviousTrack:
                     
                     
                     if currentIndexNexSong == 0{
                         currentIndexNexSong = songList.count - 1
                     }else{
-                        currentIndexNexSong = currentIndexNexSong - 1
+                        currentIndexNexSong = currentIndexNexSong! - 1
                     }
                     
                 default:
@@ -390,10 +392,10 @@ class PlayTracksViewController: UIViewController, SongPlayed, NSURLSessionDelega
             if currentIndexNexSong == songList.count - 1{
                 currentIndexNexSong = 0
             }else{
-                currentIndexNexSong = currentIndexNexSong + 1
+                currentIndexNexSong = currentIndexNexSong! + 1
             }
         }
         
-        return PlayerManager.songList[currentIndexNexSong].data
+        return PlayerManager.songList[currentIndexNexSong!].data
     }
 }

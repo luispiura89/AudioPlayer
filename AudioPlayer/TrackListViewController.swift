@@ -11,7 +11,7 @@ import UIKit
 class TrackListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var artist: Artist!
-    var selectedSongIndex: NSIndexPath!
+    var selectedSongIndex: IndexPath!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +20,10 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
         if let artistName = artist.name{
             self.title = "\(artistName)'s Songs"
         }
-        UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
 
     }
     
@@ -32,11 +32,11 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         becomeFirstResponder()
     }
     
-    override func motionBegan(motion: UIEventSubtype, withEvent event: UIEvent?) {
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
         //if let delegate = delegate{
             PlayerManager.nextTrack(false)
         //}
@@ -47,11 +47,11 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         if segue.identifier == "PlayTracks"{
-            if let vc = segue.destinationViewController as? PlayTracksViewController{
+            if let vc = segue.destination as? PlayTracksViewController{
                 let artistSongs = artist.songlist?.allObjects as? [Song]
                 vc.songList = artistSongs
                 vc.currentSong = artistSongs![selectedSongIndex.row]
@@ -64,58 +64,58 @@ class TrackListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     //MARK: TableViewDelegate
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let artistSongs = artist.songlist?.allObjects as? [Song]
         return artistSongs!.count
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0.1
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0.1
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("TrackCell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TrackCell")!
         
         let artistSongs = artist.songlist?.allObjects as? [Song]
         
         cell.textLabel?.text = artistSongs![indexPath.row].name
         cell.detailTextLabel?.text = "Album: \(artistSongs![indexPath.row].album!)"
-        cell.imageView?.image = UIImage(data: artistSongs![indexPath.row].artwork!)
+        cell.imageView?.image = UIImage(data: artistSongs![indexPath.row].artwork! as Data)
         
         return cell
         
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedSongIndex = indexPath
         
-        performSegueWithIdentifier("PlayTracks", sender: self)
+        performSegue(withIdentifier: "PlayTracks", sender: self)
     }
     
     //MARK: - RemoteControls
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+    override func remoteControlReceived(with event: UIEvent?) {
         //if let delegate = delegate{
             switch event!.subtype {
-            case .RemoteControlPlay:
+            case .remoteControlPlay:
                 PlayerManager.playTrack(false)
                 break
-            case .RemoteControlPause:
+            case .remoteControlPause:
                 PlayerManager.pauseTrack(false)
                 break
-            case .RemoteControlNextTrack:
+            case .remoteControlNextTrack:
                 PlayerManager.nextTrack(false)
                 break
-            case .RemoteControlPreviousTrack:
+            case .remoteControlPreviousTrack:
                 PlayerManager.previousTrack(false)
                 break
             default:

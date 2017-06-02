@@ -16,7 +16,7 @@ extension Artist {
 
     @NSManaged var name: String?
     @NSManaged var biography: String?
-    @NSManaged var image: NSData?
+    @NSManaged var image: Data?
     @NSManaged var songlist: NSSet?
 
 }

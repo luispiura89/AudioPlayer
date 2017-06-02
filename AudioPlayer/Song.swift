@@ -16,20 +16,20 @@ class Song: CDObject {
     //var artwork: UIImage!
     //var path: String!
     var online: Bool!
-    var fileURL : NSURL? {
+    var fileURL : URL? {
         get {
             if let filePath = path {
-                if filePath.containsString("http"){
-                    return NSURL(string: filePath)
+                if filePath.contains("http"){
+                    return URL(string: filePath)
                 }else{
-                    return NSURL(fileURLWithPath: filePath)
+                    return URL(fileURLWithPath: filePath)
                 }
             }
             return nil
         }
     }
     
-    private var artworkURL: NSURL!
+    fileprivate var artworkURL: URL!
     
     
     /*

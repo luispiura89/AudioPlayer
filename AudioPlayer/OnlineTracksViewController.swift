@@ -17,7 +17,7 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
             songsTableView.reloadData()
         }
     }
-    var selectedIndex: NSIndexPath!
+    var selectedIndex: IndexPath!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,13 +36,13 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
             // Get the new view controller using segue.destinationViewController.
             // Pass the selected object to the new view controller.
             if segue.identifier == "playOnline"{
-                if let vc = segue.destinationViewController as? PlayTracksViewController{
+                if let vc = segue.destination as? PlayTracksViewController{
                     let artistSongs = artists[selectedIndex.section].songlist?.allObjects as? [Song]
                     vc.songList = artistSongs
                     vc.currentSong = artistSongs![selectedIndex.row]
@@ -57,11 +57,11 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
     
     //MARK: - TableViewDelegate
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return artists.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let songList = artists[section].songlist{
             return songList.count
         }
@@ -69,14 +69,14 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("infoCell")!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell")!
         if let songList = artists[indexPath.section].songlist{
             if let songs = songList.allObjects as? [Song]{
                 let song = songs[indexPath.row]
                 cell.textLabel?.text = song.name
                 cell.detailTextLabel?.text = song.album
-                cell.imageView?.image = UIImage(data: song.artwork!)
+                cell.imageView?.image = UIImage(data: song.artwork! as Data)
                 /*if let artwork = song.artwork{
                     cell.imageView?.image = UIImage(data: artwork)
                 }else{
@@ -91,9 +91,9 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        let headerCell = tableView.dequeueReusableCellWithIdentifier("headerCell") as! ArtistHeaderTableViewCell
+        let headerCell = tableView.dequeueReusableCell(withIdentifier: "headerCell") as! ArtistHeaderTableViewCell
         
         
         let artist = artists[section]
@@ -110,13 +110,13 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 110
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedIndex = indexPath
-        self.performSegueWithIdentifier("playOnline", sender: self)
+        self.performSegue(withIdentifier: "playOnline", sender: self)
     }
     
     func loadArtists(){
@@ -125,14 +125,14 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
         if let res = query.find() as? [Artist]{
             if res.count == 0{
                 
-                let artist = NSEntityDescription.insertNewObjectForEntityForName(Artist.ClassName, inManagedObjectContext: SaveManager.managedObjectContext) as! Artist
+                let artist = NSEntityDescription.insertNewObject(forEntityName: Artist.ClassName, into: SaveManager.managedObjectContext) as! Artist
                 
                 artist.name = "Jorge Drexler"
                 artist.biography = "Jorge Drexler es un cantautor uruguayo, ganador del premio Óscar a Mejor canción original. Además de músico y compositor es médico."
                 artist.image = UIImageJPEGRepresentation(UIImage(named: "drexler")!, 1.0)
                 
                 var songs = [Song]()
-                var song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: SaveManager.managedObjectContext) as! Song
+                var song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: SaveManager.managedObjectContext) as! Song
                 
                 song.name = "Sea"
                 song.album = "Sea"
@@ -142,7 +142,7 @@ class OnlineTracksViewController: UIViewController, UITableViewDelegate, UITable
                 
                 songs.append(song)
                 
-                song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: SaveManager.managedObjectContext) as! Song
+                song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: SaveManager.managedObjectContext) as! Song
                 
                 song.name = "Polvo de Estrellas"
                 song.album = "Eco"

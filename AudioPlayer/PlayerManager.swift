@@ -12,50 +12,50 @@ import MediaPlayer
 
 
 class PlayerManager: NSObject {
-    private static var audioPlayerDelegated: AVAudioPlayer!
-    private static var currentSong: Song!
+    fileprivate static var audioPlayerDelegated: AVAudioPlayer!
+    fileprivate static var currentSong: Song!
     static var songList: [Song]!
     static var currentIndex: Int!
-    private static var artistInfo: Artist!
-    private static var timer: NSTimer!
-    private static var delegate: SongPlayed!
-    private static var currentSongData: NSData!
+    fileprivate static var artistInfo: Artist!
+    fileprivate static var timer: Timer!
+    fileprivate static var delegate: SongPlayed!
+    fileprivate static var currentSongData: Data!
     
-    private static var player = PlayerManager()
+    fileprivate static var player = PlayerManager()
     
     static func sharedPlayerManager() -> PlayerManager{
         return player
     }
     
-    static func currentSongData(data: NSData){
+    static func currentSongData(_ data: Data){
         currentSongData = data
     }
         
-    static func audioPlayerStarted(song: Song, songList: [Song], currentIndex : NSIndexPath, artistInfo: Artist){
+    static func audioPlayerStarted(_ song: Song, songList: [Song], currentIndex : IndexPath, artistInfo: Artist){
         if let audioPlayerDelegated = audioPlayerDelegated{
-            if audioPlayerDelegated.playing{
+            if audioPlayerDelegated.isPlaying{
                 audioPlayerDelegated.stop()
             }
         }
         
         if let url = song.fileURL{
-            UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
+            UIApplication.shared.beginReceivingRemoteControlEvents()
             
             do {
                 try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-            } catch let error as NSError {
+            } catch let error{
                 print(error.localizedDescription)
             }
             
             do {
                 try AVAudioSession.sharedInstance().setActive(true)
-            } catch let error as NSError {
+            } catch let error{
                 print(error.localizedDescription)
             }
             
             
             if !song.online{
-                audioPlayerDelegated = try! AVAudioPlayer(contentsOfURL: url)
+                audioPlayerDelegated = try! AVAudioPlayer(contentsOf: url)
             }else{
                 if let data = currentSongData{
                     audioPlayerDelegated = try! AVAudioPlayer(data: data)
@@ -69,7 +69,9 @@ class PlayerManager: NSObject {
                     timer.invalidate()
                 }
                 
-                timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
+                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
+                
+                //timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
                 
             }
             self.currentSong = song
@@ -83,25 +85,25 @@ class PlayerManager: NSObject {
         }
     }
     
-    static func setSongPlayedDelegate(songPlayed: SongPlayed){
+    static func setSongPlayedDelegate(_ songPlayed: SongPlayed){
         self.delegate = songPlayed
         if let audioPlayerDelegated = audioPlayerDelegated{
-            if audioPlayerDelegated.playing{
+            if audioPlayerDelegated.isPlaying{
                 let duration = Float(audioPlayerDelegated.duration)
                 self.delegate.setPlayerDuration(duration)
             }
         }
     }
     
-    static func setCurrentTime(notification: NSNotification){
+    static func setCurrentTime(_ any: Any){
         if let audioPlayerDelegated = audioPlayerDelegated{
-            if audioPlayerDelegated.playing{
+            if audioPlayerDelegated.isPlaying{
                 let time = Float(audioPlayerDelegated.currentTime)
                 delegate.setPlayerCurrentTime(time)
                 
             }
             
-            if !audioPlayerDelegated.playing{
+            if !audioPlayerDelegated.isPlaying{
                 timer.invalidate()
                 delegate.setPlayerCurrentTime(0.0)
                 delegate.changPlayingStatus(false)
@@ -110,19 +112,19 @@ class PlayerManager: NSObject {
         }
     }
     
-    static func setPlayerCurrentTime(time: Float){
+    static func setPlayerCurrentTime(_ time: Float){
         if let audioPlayerDelegated = audioPlayerDelegated{
-            if audioPlayerDelegated.playing{
-                let currentTime = NSTimeInterval(time)
+            if audioPlayerDelegated.isPlaying{
+                let currentTime = TimeInterval(time)
                 audioPlayerDelegated.currentTime = currentTime
-                MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
+                MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
             }
         }
     }
     
     static func stopPlaying() {
         if let audioPlayerDelegated = audioPlayerDelegated{
-            if audioPlayerDelegated.playing{
+            if audioPlayerDelegated.isPlaying{
                 audioPlayerDelegated.pause()
             }
         }
@@ -130,33 +132,33 @@ class PlayerManager: NSObject {
     
     static func resumePlaying() {
         if let audioPlayerDelegated = audioPlayerDelegated{
-            if !audioPlayerDelegated.playing{
+            if !audioPlayerDelegated.isPlaying{
                 audioPlayerDelegated.play()
-                timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
+                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
             }
         }
     }
     
-    static func playTrack(playTrack: Bool){
+    static func playTrack(_ playTrack: Bool){
         if let audioPlayerDelegated = audioPlayerDelegated{
             audioPlayerDelegated.play()
             if playTrack{
                 delegate.changPlayingStatus(true)
-                timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
+                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
             }
-            let currentTime = NSTimeInterval(audioPlayerDelegated.currentTime)
+            let currentTime = TimeInterval(audioPlayerDelegated.currentTime)
             audioPlayerDelegated.currentTime = currentTime
-            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
+            MPNowPlayingInfoCenter.default().nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
         }
     }
     
-    static func pauseTrack(playTrack: Bool){
+    static func pauseTrack(_ playTrack: Bool){
         if let audioPlayerDelegated = audioPlayerDelegated{
             audioPlayerDelegated.pause()
         }
     }
     
-    static func nextTrack(playTrack: Bool){
+    static func nextTrack(_ playTrack: Bool){
         if let audioPlayerDelegated = audioPlayerDelegated{
             audioPlayerDelegated.stop()
             if let timer = timer{
@@ -175,14 +177,15 @@ class PlayerManager: NSObject {
             currentSong = songList[currentIndex]
             if let fileURL = currentSong.fileURL{
                 if !currentSong.online{
-                    audioPlayerDelegated = try! AVAudioPlayer(contentsOfURL: fileURL)
+                    audioPlayerDelegated = try! AVAudioPlayer(contentsOf: fileURL as URL)
                 }else{
                     if let dlData = currentSong.data{
-                        audioPlayerDelegated = try! AVAudioPlayer(data: dlData)
+                        audioPlayerDelegated = try! AVAudioPlayer(data: dlData as Data)
                     }else{
                         if let data = currentSongData{
                             audioPlayerDelegated = try! AVAudioPlayer(data: data)
-                            songList[currentIndex].data = currentSongData
+                            songList[currentIndex].data = data
+                            //songList[currentIndex].data = currentSongData
                         }
                     }
                 }
@@ -193,7 +196,7 @@ class PlayerManager: NSObject {
                         let duration = Float(audioPlayerDelegated!.duration)
                         delegate.setPlayerDuration(duration)
                         delegate.changPlayingStatus(true)
-                        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
+                        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
                     }
                 
             }
@@ -201,7 +204,7 @@ class PlayerManager: NSObject {
         
     }
     
-    static func previousTrack(playTrack: Bool){
+    static func previousTrack(_ playTrack: Bool){
         if let audioPlayerDelegated = audioPlayerDelegated{
             audioPlayerDelegated.stop()
             if let timer = timer{
@@ -220,14 +223,15 @@ class PlayerManager: NSObject {
             currentSong = songList[currentIndex]
             if let fileURL = currentSong.fileURL{
                 if !currentSong.online{
-                    audioPlayerDelegated = try! AVAudioPlayer(contentsOfURL: fileURL)
+                    audioPlayerDelegated = try! AVAudioPlayer(contentsOf: fileURL as URL)
                 }else{
                     if let dlData = currentSong.data{
-                        audioPlayerDelegated = try! AVAudioPlayer(data: dlData)
+                        audioPlayerDelegated = try! AVAudioPlayer(data: dlData as Data)
                     }else{
                         if let data = currentSongData{
                             audioPlayerDelegated = try! AVAudioPlayer(data: data)
-                            songList[currentIndex].data = currentSongData
+                            songList[currentIndex].data = data
+                            //songList[currentIndex].data = currentSongData
                         }
                     }
                 }
@@ -238,7 +242,7 @@ class PlayerManager: NSObject {
                         let duration = Float(audioPlayerDelegated!.duration)
                         delegate.setPlayerDuration(duration)
                         delegate.changPlayingStatus(true)
-                        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
+                        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.setCurrentTime(_:)), userInfo: nil, repeats: true)
                     }
                 
             }
@@ -246,9 +250,9 @@ class PlayerManager: NSObject {
     }
     
     static func updateBlockedScreen() {
-        let artwork = MPMediaItemArtwork(image: UIImage(data: currentSong.artwork!)!)
+        let artwork = MPMediaItemArtwork(image: UIImage(data: currentSong.artwork! as Data)!)
         
-        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = [
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
             MPMediaItemPropertyTitle : currentSong.name!,
             MPMediaItemPropertyArtist : artistInfo.name!,
             MPMediaItemPropertyArtwork : artwork,

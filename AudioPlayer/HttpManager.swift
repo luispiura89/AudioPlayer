@@ -18,9 +18,9 @@ class HttpManager: NSObject {
     static let apiVersion = "api"
     static var offlineMode = false
     
-    static func parseData (data : NSData) -> AnyObject! {
+    static func parseData (_ data : Data) -> Any! {
         do {
-            return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)
+            return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
         } catch {
             
         }
@@ -28,10 +28,10 @@ class HttpManager: NSObject {
         return nil
     }
     
-    static func findAll(endPoint : EndPointCall, endPointparams : String? = "", params : [String : String ]? = nil, downloadAll: Bool? = false, completionBlock : (records : NSDictionary?, error : NSError?) -> Void) {
+    static func findAll(_ endPoint : EndPointCall, endPointparams : String? = "", params : [String : String ]? = nil, downloadAll: Bool? = false, completionBlock : @escaping (_ records : NSDictionary?, _ error : NSError?) -> Void) {
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            
+        //DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+        DispatchQueue.global(qos: .default).async {
             
             //let endPointparams = (endPointparams != nil ? "/" + endPointparams! : "")
             
@@ -46,82 +46,82 @@ class HttpManager: NSObject {
             let urlString = rootURL +  endPoint.rawValue + (paramsStr == "" ? "" : "?\(paramsStr)")
             print(urlString)
             
-            let url = NSURL(string: urlString)!
+            let url = URL(string: urlString)!
             
-            let session = NSURLSession.sharedSession()
-            let request = NSURLRequest(URL: url)
+            let session = URLSession.shared
+            let request = URLRequest(url: url)
             
-            let dataTask = session.dataTaskWithRequest(request) { (data : NSData?, response : NSURLResponse?, error : NSError?) in
+            let dataTask = session.dataTask(with: request, completionHandler: { (data : Data?, response : URLResponse?, error : NSError?) in
                 
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     if let error = error {
-                        completionBlock(records: nil, error: error)
+                        completionBlock(nil, error)
                         return
                     }
                     
-                    if let response = response as? NSHTTPURLResponse {
+                    if let response = response as? HTTPURLResponse {
                         
                         if response.statusCode == 404 {
                             let error = NSError(domain: "Not found", code: response.statusCode, userInfo: ["message" : "algo"])
-                            completionBlock(records: nil, error: error)
+                            completionBlock(nil, error)
                             return
                         }
                     }
                     if let data = data {
                         if let inData = parseData(data) as? NSDictionary {
-                            completionBlock(records: inData, error: nil)
+                            completionBlock(inData, nil)
                             return
                         }
                     }
-                    completionBlock(records: nil, error: error)
+                    completionBlock(nil, error)
                 })
                 
-            }
+            } as! (Data?, URLResponse?, Error?) -> Void) 
             dataTask.resume()
         }
     }
     
-    static func findAllByUrl(urlString: String, completionBlock : (records : NSDictionary?, error : NSError?) -> Void) {
+    static func findAllByUrl(_ urlString: String, completionBlock : @escaping (_ records : NSDictionary?, _ error : NSError?) -> Void) {
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            
+        //DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+        DispatchQueue.global(qos: .default).async {    
             
 
 
             
             //let urlString = rootURL + apiVersion + "/" +  endPoint.rawValue +  endPointparams + "?" + paramsStr + "api_key=" + apiKey
             
-            let url = NSURL(string: urlString)!
+            let url = URL(string: urlString)!
             
-            let session = NSURLSession.sharedSession()
-            let request = NSURLRequest(URL: url)
+            let session = URLSession.shared
+            let request = URLRequest(url: url)
             
-            let dataTask = session.dataTaskWithRequest(request) { (data : NSData?, response : NSURLResponse?, error : NSError?) in
+            let dataTask = session.dataTask(with: request, completionHandler: { (data : Data?, response : URLResponse?, error : NSError?) in
                 
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     if let error = error {
-                        completionBlock(records: nil, error: error)
+                        completionBlock(nil, error)
                         return
                     }
                     
-                    if let response = response as? NSHTTPURLResponse {
+                    if let response = response as? HTTPURLResponse {
                         
                         if response.statusCode == 404 {
                             let error = NSError(domain: "Not found", code: response.statusCode, userInfo: ["message" : "algo"])
-                            completionBlock(records: nil, error: error)
+                            completionBlock(nil, error)
                             return
                         }
                     }
                     if let data = data {
                         if let inData = parseData(data) as? NSDictionary {
-                            completionBlock(records: inData, error: nil)
+                            completionBlock(inData, nil)
                             return
                         }
                     }
-                    completionBlock(records: nil, error: error)
+                    completionBlock(nil, error)
                 })
                 
-            }
+            } as! (Data?, URLResponse?, Error?) -> Void) 
             dataTask.resume()
         }
     }

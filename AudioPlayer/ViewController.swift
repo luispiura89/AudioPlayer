@@ -19,7 +19,7 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
     var delegate: SongPlayed!
     var currentSong: Song!
     var songList: [Song]!
-    var currentIndex: Int!
+    //var currentIndex: Int!
     var artistInfo: Artist!
     
     override func viewDidLoad() {
@@ -43,9 +43,9 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         */
         
         for index in 0..<artistsInfo.count{
-            if let artistController = self.storyboard?.instantiateViewControllerWithIdentifier("ArtistInfo") as? ArtistInfoViewController{
+            if let artistController = self.storyboard?.instantiateViewController(withIdentifier: "ArtistInfo") as? ArtistInfoViewController{
                 
-                let artist = NSEntityDescription.insertNewObjectForEntityForName(Artist.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Artist//Artist()//Artist(name: artistsInfo[index].name, biography: artistsInfo[index].news, image: artistsInfo[index].image)
+                let artist = NSEntityDescription.insertNewObject(forEntityName: Artist.ClassName, into: DataManager.managedObjectContext) as! Artist//Artist()//Artist(name: artistsInfo[index].name, biography: artistsInfo[index].news, image: artistsInfo[index].image)
                 
                 artist.name = artistsInfo[index].name
                 artist.biography = artistsInfo[index].news
@@ -59,20 +59,20 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
                 case 0:
                     songList = [Song]()
                     
-                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: DataManager.managedObjectContext) as! Song
                     song.name = "Bloomdido"
                     song.album = "Bird And Diz"
                     song.artwork = UIImageJPEGRepresentation(UIImage(named: "BirdAndDiz")!, 1.0)
-                    song.path = NSBundle.mainBundle().pathForResource("Bloomdido", ofType: "mp3")!
+                    song.path = Bundle.main.path(forResource: "Bloomdido", ofType: "mp3")!
                     song.online = false
                     
                     songList.append(song)
                     
-                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: DataManager.managedObjectContext) as! Song
                     song.name = "Scrapple From The Apple"
                     song.album = "Bird And Diz"
                     song.artwork = UIImageJPEGRepresentation(UIImage(named: "BirdAndDiz")!, 1.0)
-                    song.path = NSBundle.mainBundle().pathForResource("ScrappleFromTheApple", ofType: "mp3")!
+                    song.path = Bundle.main.path(forResource: "ScrappleFromTheApple", ofType: "mp3")!
                     song.online = false
                     
                     songList.append(song)
@@ -82,20 +82,20 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
                 case 1:
                     songList = [Song]()
                     
-                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: DataManager.managedObjectContext) as! Song
                     song.name = "Don't Panic"
                     song.album = "Parachutes"
                     song.artwork = UIImageJPEGRepresentation(UIImage(named: "Parachutes")!, 1.0)
-                    song.path = NSBundle.mainBundle().pathForResource("DontPanic", ofType: "mp3")!
+                    song.path = Bundle.main.path(forResource: "DontPanic", ofType: "mp3")!
                     song.online = false
                     
                     songList.append(song)
                     
-                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: DataManager.managedObjectContext) as! Song
                     song.name = "Adventure Of A Lifetime"
                     song.album = "A Head Full Of Dreams"
                     song.artwork = UIImageJPEGRepresentation(UIImage(named: "AHeadFullOfDreams")!, 1.0)
-                    song.path = NSBundle.mainBundle().pathForResource("AdventureOfALifetime", ofType: "mp3")!
+                    song.path = Bundle.main.path(forResource: "AdventureOfALifetime", ofType: "mp3")!
                     song.online = false
                     
                     songList.append(song)
@@ -104,20 +104,20 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
                 case 2:
                     songList = [Song]()
                     
-                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: DataManager.managedObjectContext) as! Song
                     song.name = "So It May Secretly Begin"
                     song.album = "Still Life(Talking)"
                     song.artwork = UIImageJPEGRepresentation(UIImage(named: "StillLife")!, 1.0)
-                    song.path = NSBundle.mainBundle().pathForResource("SoItMaySecretlyBegin", ofType: "mp3")!
+                    song.path = Bundle.main.path(forResource: "SoItMaySecretlyBegin", ofType: "mp3")!
                     song.online = false
                     
                     songList.append(song)
                     
-                    song = NSEntityDescription.insertNewObjectForEntityForName(Song.ClassName, inManagedObjectContext: DataManager.managedObjectContext) as! Song
+                    song = NSEntityDescription.insertNewObject(forEntityName: Song.ClassName, into: DataManager.managedObjectContext) as! Song
                     song.name = "Au Lait"
                     song.album = "Offramp"
                     song.artwork = UIImageJPEGRepresentation(UIImage(named: "Offramp")!, 1.0)
-                    song.path = NSBundle.mainBundle().pathForResource("AuLait", ofType: "mp3")!
+                    song.path = Bundle.main.path(forResource: "AuLait", ofType: "mp3")!
                     song.online = false
                     
                     songList.append(song)
@@ -139,7 +139,7 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         }
         
         if let firstArtistPage = artistPages.first{
-            self.artistsPageLoader.setViewControllers([firstArtistPage], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+            self.artistsPageLoader.setViewControllers([firstArtistPage], direction: UIPageViewControllerNavigationDirection.forward, animated: true, completion: nil)
         }
         
     }
@@ -149,9 +149,9 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         // Dispose of any resources that can be recreated.
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "LoadArtistInfo"{
-            artistsPageLoader = segue.destinationViewController as! UIPageViewController
+            artistsPageLoader = segue.destination as! UIPageViewController
             
             artistsPageLoader.dataSource = self
             artistsPageLoader.delegate = self
@@ -159,17 +159,17 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         becomeFirstResponder()
     }
     
-    override func motionBegan(motion: UIEventSubtype, withEvent event: UIEvent?) {
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
         PlayerManager.nextTrack(false)
     }
     
     //MARK: - UIPageControllerDelegate
     
-    func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
         var index = -1
         
@@ -184,7 +184,7 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
         return nil
     }
     
-    func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         
         var index = -1
         
@@ -200,19 +200,19 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
     }
     
     //MARK: - RemoteControls
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+    override func remoteControlReceived(with event: UIEvent?) {
         
         switch event!.subtype {
-        case .RemoteControlPlay:
+        case .remoteControlPlay:
             PlayerManager.playTrack(false)
             break
-        case .RemoteControlPause:
+        case .remoteControlPause:
             PlayerManager.pauseTrack(false)
             break
-        case .RemoteControlNextTrack:
+        case .remoteControlNextTrack:
             PlayerManager.nextTrack(false)
             break
-        case .RemoteControlPreviousTrack:
+        case .remoteControlPreviousTrack:
             PlayerManager.previousTrack(false)
             break
         default:
@@ -222,8 +222,8 @@ class ViewController: UIViewController, UIPageViewControllerDelegate,UIPageViewC
     }
   
     
-    @IBAction func showDownload(sender: AnyObject) {
-        performSegueWithIdentifier("downloadCenter", sender: self)
+    @IBAction func showDownload(_ sender: AnyObject) {
+        performSegue(withIdentifier: "downloadCenter", sender: self)
     }
     
     
