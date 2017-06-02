@@ -93,16 +93,17 @@ class PlayTracksViewController: UIViewController, SongPlayed, URLSessionDelegate
             PlayerManager.nextTrack(true)
         }else{
             didMotion = true
-            if nextSongURL() != nil{
+            if let url = nextSongURL(){
                 if nextSongData() != nil{
                     PlayerManager.nextTrack(true)
                 }else{
                     if !isDownloading{
                         isDownloading = true
-                        /*let downloadRequest = NSMutableURLRequest(url: url)
-                        let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                        
+                        let downloadRequest = URLRequest(url: url)
+                        let session = Foundation.URLSession(configuration: .default, delegate: self, delegateQueue: .main)
                         downloadTask = session.downloadTask(with: downloadRequest)
-                        downloadTask.resume()*/
+                        downloadTask.resume()
                     }
                 }
             }
@@ -134,13 +135,14 @@ class PlayTracksViewController: UIViewController, SongPlayed, URLSessionDelegate
                 PlayerManager.audioPlayerStarted(currentSong, songList: songList, currentIndex: songIndex, artistInfo: artist)
                 PlayerManager.setSongPlayedDelegate(self)
             }else{
-                if currentSong.fileURL != nil{
+                if let url = currentSong.fileURL{
                     if !isDownloading{
                         isDownloading = true
-                        /*let downloadRequest = NSMutableURLRequest(url: URL as URL)
-                        let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                        
+                        let downloadRequest = URLRequest(url: url)
+                        let session = Foundation.URLSession(configuration: .default, delegate: self, delegateQueue: .main)
                         downloadTask = session.downloadTask(with: downloadRequest)
-                        downloadTask.resume()*/
+                        downloadTask.resume()
                     }
                 }
             }
@@ -226,18 +228,17 @@ class PlayTracksViewController: UIViewController, SongPlayed, URLSessionDelegate
                 if !currentSong.online{
                     PlayerManager.nextTrack(true)
                 }else{
-                    if nextSongURL() != nil{
+                    if let url = nextSongURL(){
                         if nextSongData() != nil{
                             PlayerManager.nextTrack(true)
                         }else{
                             if !isDownloading{
                                 isDownloading = true
-                                //let downloadRequest = NSMutableURLRequest(url: url)
                                 
-                                //let downloadRequest = NSMutableURLRequest(url: url)
-                                //let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
-                                //downloadTask = session.downloadTask(with: downloadRequest)
-                                //downloadTask.resume()
+                                let downloadRequest = URLRequest(url: url)
+                                let session = Foundation.URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+                                downloadTask = session.downloadTask(with: downloadRequest)
+                                downloadTask.resume()
                             }
                         }
                     }
@@ -248,16 +249,17 @@ class PlayTracksViewController: UIViewController, SongPlayed, URLSessionDelegate
                 if !currentSong.online{
                     PlayerManager.previousTrack(true)
                 }else{
-                    if nextSongURL() != nil{
+                    if let url = nextSongURL(){
                         if nextSongData() != nil{
                             PlayerManager.previousTrack(true)
                         }else{
                             if !isDownloading{
                                 isDownloading = true
-                                /*let downloadRequest = NSMutableURLRequest(url: url)
-                                let session = Foundation.URLSession(configuration: URLSessionConfiguration.default , delegate: self, delegateQueue: OperationQueue.main)
+                                
+                                let downloadRequest = URLRequest(url: url)
+                                let session = Foundation.URLSession(configuration: .default, delegate: self, delegateQueue: .main)
                                 downloadTask = session.downloadTask(with: downloadRequest)
-                                downloadTask.resume()*/
+                                downloadTask.resume()
                             }
                         }
                     }
